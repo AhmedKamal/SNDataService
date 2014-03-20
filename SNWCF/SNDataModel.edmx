@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SmartNewsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="SmartNewsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Categories">
           <Key>
             <PropertyRef Name="CategoryID" />
@@ -25,6 +25,7 @@
           <Property Name="IDNewsSources" Type="bigint" Nullable="false" />
           <Property Name="ClusterID" Type="bigint" />
           <Property Name="CategoryID" Type="bigint" />
+          <Property Name="ReadCount" Type="bigint" Nullable="false" />
         </EntityType>
         <EntityType Name="NewsSources">
           <Key>
@@ -33,7 +34,7 @@
           <Property Name="NewsSourcesID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="SourceName" Type="nvarchar" MaxLength="2000" Nullable="false" />
           <Property Name="URL" Type="nvarchar" MaxLength="2000" Nullable="false" />
-          <Property Name="Langguage" Type="nvarchar" MaxLength="50" />
+          <Property Name="Language" Type="nvarchar" MaxLength="50" />
           <Property Name="Type" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Preferences">
@@ -194,8 +195,7 @@
             <End Role="UserFavSources" EntitySet="UserFavSources" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SmartNewsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -223,6 +223,7 @@
           <NavigationProperty Name="Category" Relationship="Self.FK_Items_Categories" FromRole="Items" ToRole="Categories" />
           <NavigationProperty Name="NewsSource" Relationship="Self.FK_Items_NewsSources" FromRole="Items" ToRole="NewsSources" />
           <NavigationProperty Name="Preferences" Relationship="Self.FK_Preferences_Items" FromRole="Items" ToRole="Preferences" />
+          <Property Name="ReadCount" Type="Int64" Nullable="false" />
         </EntityType>
         <EntityType Name="NewsSource">
           <Key>
@@ -231,10 +232,10 @@
           <Property Name="NewsSourcesID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="SourceName" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="URL" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Langguage" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Items" Relationship="Self.FK_Items_NewsSources" FromRole="NewsSources" ToRole="Items" />
           <NavigationProperty Name="Users" Relationship="Self.UserFavSources" FromRole="NewsSources" ToRole="Users" />
+          <Property Name="Language" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Preference">
           <Key>
@@ -384,6 +385,7 @@
           <EntitySetMapping Name="Items">
             <EntityTypeMapping TypeName="SmartNewsModel.Item">
               <MappingFragment StoreEntitySet="Items">
+                <ScalarProperty Name="ReadCount" ColumnName="ReadCount" />
                 <ScalarProperty Name="ItemID" ColumnName="ItemID" />
                 <ScalarProperty Name="URL" ColumnName="URL" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
@@ -399,10 +401,10 @@
           <EntitySetMapping Name="NewsSources">
             <EntityTypeMapping TypeName="SmartNewsModel.NewsSource">
               <MappingFragment StoreEntitySet="NewsSources">
+                <ScalarProperty Name="Language" ColumnName="Language" />
                 <ScalarProperty Name="NewsSourcesID" ColumnName="NewsSourcesID" />
                 <ScalarProperty Name="SourceName" ColumnName="SourceName" />
                 <ScalarProperty Name="URL" ColumnName="URL" />
-                <ScalarProperty Name="Langguage" ColumnName="Langguage" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
               </MappingFragment>
             </EntityTypeMapping>

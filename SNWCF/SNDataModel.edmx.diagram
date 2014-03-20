@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="afb41843bede46ec91ea24e6d6429553" Name="Diagram1">
+      <Diagram DiagramId="afb41843bede46ec91ea24e6d6429553" Name="Diagram1" ZoomLevel="78">
         <EntityTypeShape EntityType="SmartNewsModel.Category" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="SmartNewsModel.Item" Width="1.5" PointX="2.875" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="SmartNewsModel.NewsSource" Width="1.5" PointX="0.75" PointY="3.5" IsExpanded="true" />

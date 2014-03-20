@@ -28,6 +28,7 @@ namespace SNWCF
         public long IDNewsSources { get; set; }
         public Nullable<long> ClusterID { get; set; }
         public Nullable<long> CategoryID { get; set; }
+        public long ReadCount { get; set; }
     
         public virtual Category Category { get; set; }
         public virtual NewsSource NewsSource { get; set; }
