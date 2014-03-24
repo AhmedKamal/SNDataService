@@ -12,6 +12,7 @@ using System.ServiceModel.Web;
 using System.Data.Services.Providers;
 using System.Web;
 using System.Data.Linq;
+using LuceneService;
 
 namespace SNWCF
 {
@@ -46,13 +47,36 @@ namespace SNWCF
 
         [WebGet]
 
-        public IQueryable<Item> SearchNews(string query) {
+        public IEnumerable<int> SearchNews(string query) {
 
-            var result = (from items in de.Items
-                          where items.Content.Contains(query)
-                          select items);
+            int limit = 100;
+            string indexDir = "Index";
 
-            return result;
+            
+
+            var newsItems = from items in de.Items
+                            //where items.DateOfItem > DateTime.Today 
+                            select new { items.Content, items.Title, items.ItemID };
+
+            List<NewsItem> inputData = new List<NewsItem>();
+            foreach (var item in newsItems)
+            {
+                inputData.Add(new NewsItem{Title=item.Title , Content=item.Content , ID = item.ItemID});
+            }
+
+
+            //Indexing Documents *** Updating the index should be done when new items are added , this code shouldn't be here.
+            //Indexer luceneindexer = new Indexer(indexDir);
+            //luceneindexer.Index(inputData);
+            //luceneindexer.Close();
+
+            var results = Searcher.Search(indexDir, query, limit);
+
+            //item1 => news item id
+            //item2 => accuracy percentage
+
+
+            return results;
         }
 
         [WebInvoke]

@@ -133,7 +133,12 @@
       <DependentUpon>SNDataModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\LuceneService\LuceneService.csproj">
+      <Project>{e757b314-4898-4a74-9567-f410727ee2fa}</Project>
+      <Name>LuceneService</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="SNDataModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
