@@ -13,6 +13,7 @@ using System.Data.Services.Providers;
 using System.Web;
 using System.Data.Linq;
 using LuceneService;
+using System.Net;
 
 namespace SNWCF
 {
@@ -47,34 +48,19 @@ namespace SNWCF
 
         [WebGet]
 
-        public IEnumerable<int> SearchNews(string query) {
+        public IQueryable<Item> SearchNews(string query , int limit) {
 
-            int limit = 100;
             string indexDir = "Index";
-
             
+            //Utilities.IndexNewDocs();
 
-            var newsItems = from items in de.Items
-                            //where items.DateOfItem > DateTime.Today 
-                            select new { items.Content, items.Title, items.ItemID };
-
-            List<NewsItem> inputData = new List<NewsItem>();
-            foreach (var item in newsItems)
-            {
-                inputData.Add(new NewsItem{Title=item.Title , Content=item.Content , ID = item.ItemID});
-            }
+            var resultsIDs = Searcher.Search(indexDir, query, limit);
 
 
-            //Indexing Documents *** Updating the index should be done when new items are added , this code shouldn't be here.
-            //Indexer luceneindexer = new Indexer(indexDir);
-            //luceneindexer.Index(inputData);
-            //luceneindexer.Close();
 
-            var results = Searcher.Search(indexDir, query, limit);
-
-            //item1 => news item id
-            //item2 => accuracy percentage
-
+            var results = from items in de.Items
+                         where resultsIDs.Contains(items.ItemID)
+                         select items;         
 
             return results;
         }
@@ -100,10 +86,11 @@ namespace SNWCF
 
         [WebInvoke]
         public void ClassifyNewItems() {
-        
-        // Calling Classifier
-            throw new NotImplementedException();
 
+            string ClassifierPath = "";
+        // Calling Classifier
+            WebClient client = new WebClient();
+            client.DownloadString(ClassifierPath);
         }
 
         [WebInvoke]
@@ -122,7 +109,45 @@ namespace SNWCF
 
             return items;
         }
-        //Get Other data can be done using filtering methods
+        
+        //Validations Constraints
+
+        [ChangeInterceptor("Users")]
+        public void UserUpdatedOrAdded(User u, UpdateOperations operation) {
+
+            if (operation == UpdateOperations.Add || operation == UpdateOperations.Change)
+            {
+
+                var usersWithSameName = from users in de.Users
+                                        where users.UserName == u.UserName
+                                        select users;
+
+                if (!Utilities.IsUNameUnique(u))
+                    throw new DataServiceException(400, "UserName is taken");
+
+                else if (!Utilities.IsEmailUnique(u))
+                    throw new DataServiceException(400, "Email is taken");
+
+                else if(!Utilities.IsEmailRight(u))
+                    throw new DataServiceException(400, "Email is wrong");
+
+                else if (!Utilities.IsUNameRight(u))
+                    throw new DataServiceException(400, "UserName is wrong");
+            
+            }
+        
+        }
+
+
+        public void AddItems(IEnumerable<Item> newItems) {
+
+            foreach (var item in newItems)
+            {
+                string content = item.Content;
+            }
+        
+        
+        }
 
     }
 }

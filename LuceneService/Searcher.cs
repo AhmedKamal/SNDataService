@@ -1,4 +1,5 @@
 ﻿using Lucene.Net.Analysis.Standard;
+using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.QueryParsers;
 using Lucene.Net.Search;
@@ -15,7 +16,7 @@ namespace LuceneService
     public class Searcher
     {
 
-        public static IEnumerable<int> Search(string indexDir, string myquery , int limit)
+        public static List<long> Search(string indexDir, string myquery , int limit)
         {
 
             Directory dir = FSDirectory.Open(indexDir);
@@ -25,7 +26,7 @@ namespace LuceneService
             //var terms = reader.GetTermFreqVector(4, "Content").GetTerms();
             int count = reader.NumDocs();
             IndexSearcher indexSearcher = new IndexSearcher(dir);
-            QueryParser parser = new QueryParser(Lucene.Net.Util.Version.LUCENE_30, "Content", new Lucene.Net.Analysis.Standard.StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_30));
+            QueryParser parser = new QueryParser(Lucene.Net.Util.Version.LUCENE_30, "Content", new Lucene.Net.Analysis.AR.ArabicAnalyzer(Lucene.Net.Util.Version.LUCENE_30));
             Query query = parser.Parse(myquery);
             TopDocs docs = indexSearcher.Search(query, limit);
 
@@ -36,10 +37,13 @@ namespace LuceneService
             //    results.Add(Tuple.Create<int,float>(doc.Doc , doc.Score));
             //}
 
-            List<int> results = new List<int>();
+            List<long> results = new List<long>();
             foreach (var doc in docs.ScoreDocs)
             {
-                results.Add(doc.Doc);
+                Document resDoc = indexSearcher.Doc(doc.Doc);
+                Field resDocIDField = resDoc.GetField("ID");
+                int resDocID = int.Parse((resDocIDField.StringValue));
+                results.Add(resDocID);
             }
             indexSearcher.Dispose();
             return results;

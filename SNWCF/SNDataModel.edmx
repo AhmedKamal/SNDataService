@@ -271,6 +271,7 @@
           <NavigationProperty Name="Preferences" Relationship="Self.FK_Preferences_Users" FromRole="Users" ToRole="Preferences" />
           <NavigationProperty Name="ToReadLists" Relationship="Self.FK_ToReadList_Users" FromRole="Users" ToRole="ToReadList" />
           <NavigationProperty Name="NewsSources" Relationship="Self.UserFavSources" FromRole="Users" ToRole="NewsSources" />
+          <Property Name="UserVector" Type="String" Nullable="false" MaxLength="Max" Unicode="true" />
         </EntityType>
         <Association Name="FK_Items_Categories">
           <End Role="Categories" Type="Self.Category" Multiplicity="0..1" />

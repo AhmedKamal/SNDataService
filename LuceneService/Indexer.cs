@@ -18,7 +18,8 @@ namespace LuceneService
         Lucene.Net.Store.Directory dir;
         public Indexer(string indexDir) {
             dir = FSDirectory.Open(indexDir);
-            writer = new IndexWriter(dir, new Lucene.Net.Analysis.Standard.StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_30), IndexWriter.MaxFieldLength.UNLIMITED);
+            //stop words can be addede to the analyzer 3la fekra :D
+            writer = new IndexWriter(dir, new Lucene.Net.Analysis.AR.ArabicAnalyzer(Lucene.Net.Util.Version.LUCENE_30), IndexWriter.MaxFieldLength.UNLIMITED);
         }
 
 
@@ -37,11 +38,13 @@ namespace LuceneService
 
         private void IndexFile(NewsItem item)
         {
+
             Document doc = new Document();
             string content = item.Content;
             string title = item.Title;
             doc.Add(new Field("Content" , content , Field.Store.YES , Field.Index.ANALYZED , Field.TermVector.NO));
             doc.Add(new Field("Title", title, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.NO));
+            doc.Add(new Field("ID", item.ID.ToString(), Field.Store.YES, Field.Index.NO , Field.TermVector.NO));
 
             writer.AddDocument(doc);
         }
