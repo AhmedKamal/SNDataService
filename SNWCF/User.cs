@@ -28,6 +28,7 @@ namespace SNWCF
         public string UserName { get; set; }
         public string Password { get; set; }
         public string ssd { get; set; }
+        public string UserProfile { get; set; }
     
         public virtual ICollection<Preference> Preferences { get; set; }
         public virtual ICollection<ToReadList> ToReadLists { get; set; }

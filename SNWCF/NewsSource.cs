@@ -23,8 +23,8 @@ namespace SNWCF
         public long NewsSourcesID { get; set; }
         public string SourceName { get; set; }
         public string URL { get; set; }
-        public string Type { get; set; }
         public string Language { get; set; }
+        public string Type { get; set; }
     
         public virtual ICollection<Item> Items { get; set; }
         public virtual ICollection<User> Users { get; set; }

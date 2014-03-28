@@ -13,10 +13,10 @@ namespace SNWCF
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class SmartNewsEntities : DbContext
+    public partial class SNDataModel : DbContext
     {
-        public SmartNewsEntities()
-            : base("name=SmartNewsEntities")
+        public SNDataModel()
+            : base("name=SNDataModel")
         {
         }
     

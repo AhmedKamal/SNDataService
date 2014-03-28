@@ -4,13 +4,13 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="SmartNewsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="SmartNewsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Categories">
           <Key>
             <PropertyRef Name="CategoryID" />
           </Key>
           <Property Name="CategoryID" Type="bigint" Nullable="false" />
-          <Property Name="CategoryName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CategoryName" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Items">
           <Key>
@@ -25,15 +25,15 @@
           <Property Name="IDNewsSources" Type="bigint" Nullable="false" />
           <Property Name="ClusterID" Type="bigint" />
           <Property Name="CategoryID" Type="bigint" />
-          <Property Name="ReadCount" Type="bigint" Nullable="false" />
+          <Property Name="ReadCount" Type="int" />
         </EntityType>
         <EntityType Name="NewsSources">
           <Key>
             <PropertyRef Name="NewsSourcesID" />
           </Key>
           <Property Name="NewsSourcesID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="SourceName" Type="nvarchar" MaxLength="2000" Nullable="false" />
-          <Property Name="URL" Type="nvarchar" MaxLength="2000" Nullable="false" />
+          <Property Name="SourceName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="URL" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Language" Type="nvarchar" MaxLength="50" />
           <Property Name="Type" Type="nvarchar" MaxLength="50" />
         </EntityType>
@@ -67,12 +67,13 @@
             <PropertyRef Name="UserID" />
           </Key>
           <Property Name="UserID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FirstName" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="LastName" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="UserName" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Password" Type="varchar" MaxLength="128" Nullable="false" />
-          <Property Name="ssd" Type="varchar" MaxLength="20" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ssd" Type="nvarchar" MaxLength="50" />
+          <Property Name="UserProfile" Type="varchar(max)" />
         </EntityType>
         <Association Name="FK_Items_Categories">
           <End Role="Categories" Type="Self.Categories" Multiplicity="0..1" />
@@ -195,7 +196,8 @@
             <End Role="UserFavSources" EntitySet="UserFavSources" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SmartNewsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -204,7 +206,7 @@
             <PropertyRef Name="CategoryID" />
           </Key>
           <Property Name="CategoryID" Type="Int64" Nullable="false" />
-          <Property Name="CategoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CategoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Items" Relationship="Self.FK_Items_Categories" FromRole="Categories" ToRole="Items" />
         </EntityType>
         <EntityType Name="Item">
@@ -220,22 +222,22 @@
           <Property Name="IDNewsSources" Type="Int64" Nullable="false" />
           <Property Name="ClusterID" Type="Int64" />
           <Property Name="CategoryID" Type="Int64" />
+          <Property Name="ReadCount" Type="Int32" />
           <NavigationProperty Name="Category" Relationship="Self.FK_Items_Categories" FromRole="Items" ToRole="Categories" />
           <NavigationProperty Name="NewsSource" Relationship="Self.FK_Items_NewsSources" FromRole="Items" ToRole="NewsSources" />
           <NavigationProperty Name="Preferences" Relationship="Self.FK_Preferences_Items" FromRole="Items" ToRole="Preferences" />
-          <Property Name="ReadCount" Type="Int64" Nullable="false" />
         </EntityType>
         <EntityType Name="NewsSource">
           <Key>
             <PropertyRef Name="NewsSourcesID" />
           </Key>
           <Property Name="NewsSourcesID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SourceName" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="URL" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SourceName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="URL" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Language" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Items" Relationship="Self.FK_Items_NewsSources" FromRole="NewsSources" ToRole="Items" />
           <NavigationProperty Name="Users" Relationship="Self.UserFavSources" FromRole="NewsSources" ToRole="Users" />
-          <Property Name="Language" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Preference">
           <Key>
@@ -262,16 +264,16 @@
             <PropertyRef Name="UserID" />
           </Key>
           <Property Name="UserID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FirstName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="LastName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Password" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ssd" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ssd" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserProfile" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Preferences" Relationship="Self.FK_Preferences_Users" FromRole="Users" ToRole="Preferences" />
           <NavigationProperty Name="ToReadLists" Relationship="Self.FK_ToReadList_Users" FromRole="Users" ToRole="ToReadList" />
           <NavigationProperty Name="NewsSources" Relationship="Self.UserFavSources" FromRole="Users" ToRole="NewsSources" />
-          <Property Name="UserVector" Type="String" Nullable="false" MaxLength="Max" Unicode="true" />
         </EntityType>
         <Association Name="FK_Items_Categories">
           <End Role="Categories" Type="Self.Category" Multiplicity="0..1" />
@@ -337,7 +339,7 @@
           <End Role="NewsSources" Type="Self.NewsSource" Multiplicity="*" />
           <End Role="Users" Type="Self.User" Multiplicity="*" />
         </Association>
-        <EntityContainer Name="SmartNewsEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="SNDataModel" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Categories" EntityType="Self.Category" />
           <EntitySet Name="Items" EntityType="Self.Item" />
           <EntitySet Name="NewsSources" EntityType="Self.NewsSource" />
@@ -374,7 +376,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="SmartNewsModelStoreContainer" CdmEntityContainer="SmartNewsEntities">
+        <EntityContainerMapping StorageEntityContainer="SmartNewsModelStoreContainer" CdmEntityContainer="SNDataModel">
           <EntitySetMapping Name="Categories">
             <EntityTypeMapping TypeName="SmartNewsModel.Category">
               <MappingFragment StoreEntitySet="Categories">
@@ -386,7 +388,6 @@
           <EntitySetMapping Name="Items">
             <EntityTypeMapping TypeName="SmartNewsModel.Item">
               <MappingFragment StoreEntitySet="Items">
-                <ScalarProperty Name="ReadCount" ColumnName="ReadCount" />
                 <ScalarProperty Name="ItemID" ColumnName="ItemID" />
                 <ScalarProperty Name="URL" ColumnName="URL" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
@@ -396,16 +397,17 @@
                 <ScalarProperty Name="IDNewsSources" ColumnName="IDNewsSources" />
                 <ScalarProperty Name="ClusterID" ColumnName="ClusterID" />
                 <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="ReadCount" ColumnName="ReadCount" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="NewsSources">
             <EntityTypeMapping TypeName="SmartNewsModel.NewsSource">
               <MappingFragment StoreEntitySet="NewsSources">
-                <ScalarProperty Name="Language" ColumnName="Language" />
                 <ScalarProperty Name="NewsSourcesID" ColumnName="NewsSourcesID" />
                 <ScalarProperty Name="SourceName" ColumnName="SourceName" />
                 <ScalarProperty Name="URL" ColumnName="URL" />
+                <ScalarProperty Name="Language" ColumnName="Language" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -437,6 +439,7 @@
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="ssd" ColumnName="ssd" />
+                <ScalarProperty Name="UserProfile" ColumnName="UserProfile" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

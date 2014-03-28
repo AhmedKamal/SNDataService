@@ -19,10 +19,10 @@ namespace SNWCF
 {
     [System.ServiceModel.ServiceBehavior(IncludeExceptionDetailInFaults = true)]
 
-    public class SNDataService : EntityFrameworkDataService<SmartNewsEntities>
+    public class SNDataService : EntityFrameworkDataService<SNDataModel>
     {
 
-        public static SmartNewsEntities de;
+        public static SNDataModel de;
         // This method is called only once to initialize service-wide policies.
         public static void InitializeService(DataServiceConfiguration config)
         {
@@ -32,7 +32,7 @@ namespace SNWCF
             config.SetServiceOperationAccessRule("*", ServiceOperationRights.All);
             config.DataServiceBehavior.MaxProtocolVersion = DataServiceProtocolVersion.V3;
             config.UseVerboseErrors = true;
-            de= new SmartNewsEntities();
+            de = new SNDataModel();
                        
         }
 
@@ -141,10 +141,12 @@ namespace SNWCF
 
         public void AddItems(IEnumerable<Item> newItems) {
 
-            foreach (var item in newItems)
-            {
-                string content = item.Content;
-            }
+                string indexDir = "Index";
+                List<NewsItem> inputData = Utilities.MapBetweenLuceneandSQL(newItems);
+                Indexer luceneindexer = new Indexer(indexDir);
+                luceneindexer.Index(inputData);
+                luceneindexer.Close();
+            
         
         
         }

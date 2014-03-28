@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="SNWCF.Azure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="3" osVersion="*" schemaVersion="2013-10.2.2">
+  <Role name="SNWCF">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="akamal8" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCECkj/PPi89asT1b7AkOlMYEwDQYJKoZIhvcNAQEBBQAEggEAlTdZtuHKpwb4jIT92YLLGl/+9It6M48s6XgPmKd8UhkJoGAQr64iiANjxxHYu8ga9S4DFWwQTPrjBgNimc2I10q5KLgTRMM70OgObdwc9G1ndX5GPCOuBlpG5nf4Ozjslz1wGJ1rz54/7Q0QrLDFeH/yWTTMEiNQ3ZaiWgepGaClceW8YO+P2aGdpwgUQEBAsmQf+x1//pnL7cBaRtTPtoDvHPJSWyW6OspdUkOJl1MJJcgZRt19QlfBBTlIyafZzjySX95xRGiEac2yIUfluSszUPqHFztGaULGzehyL/gPfNpYFjF5WYcKrza+ynLuyyKJ0o4rfD7i2KbB6I16lzAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECJDqAb/38zfKgBDLrTVO5CKCubYZtuVCTJ+Z" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2015-03-28T23:59:59.0000000+02:00" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.Enabled" value="true" />
+    </ConfigurationSettings>
+    <Certificates>
+      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="3F8AEF3D45FE05A9CB05F70784CEDEDF8DE393B6" thumbprintAlgorithm="sha1" />
+    </Certificates>
+  </Role>
+</ServiceConfiguration>

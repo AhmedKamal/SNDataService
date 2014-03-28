@@ -9,7 +9,7 @@ namespace SNWCF
 {
 	public class Utilities
 	{
-        static SmartNewsEntities de = SNDataService.de;
+        static SNDataModel de = SNDataService.de;
         public static bool IsEmailUnique(User u) {
 
             var usersWithSameEmail = from users in de.Users
@@ -44,10 +44,9 @@ namespace SNWCF
             return Regex.IsMatch(u.Email, EmailPattern);
         }
 
-        public static bool IndexNewDocs() {
+        public static List<NewsItem> MapBetweenLuceneandSQL(IEnumerable<Item> newitems) {
 
-            var newsItems = from items in de.Items
-                            where items.DateOfItem > DateTime.Today
+            var newsItems = from items in newitems
                             select new { items.Content, items.Title, items.ItemID };
 
             List<NewsItem> inputData = new List<NewsItem>();
@@ -55,6 +54,17 @@ namespace SNWCF
             {
                 inputData.Add(new NewsItem { Title = item.Title, Content = item.Content, ID = item.ItemID });
             }
+
+            return inputData;
+        }
+
+        public static bool IndexNewDocs() {
+
+            var newsItems = from items in de.Items
+                            where items.DateOfItem > DateTime.Today
+                            select items;
+          
+            var inputData = MapBetweenLuceneandSQL(newsItems);
 
             string indexDir = "Index";
 
