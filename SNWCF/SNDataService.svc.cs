@@ -50,12 +50,9 @@ namespace SNWCF
 
         public IQueryable<Item> SearchNews(string query , int limit) {
 
-            string indexDir = "Index";
+            string indexDir = "E://Index";
             
-            //Utilities.IndexNewDocs();
-
             var resultsIDs = Searcher.Search(indexDir, query, limit);
-
 
 
             var results = from items in de.Items
@@ -82,15 +79,6 @@ namespace SNWCF
                 return true;
             }
         
-        }
-
-        [WebInvoke]
-        public void ClassifyNewItems() {
-
-            string ClassifierPath = "";
-        // Calling Classifier
-            WebClient client = new WebClient();
-            client.DownloadString(ClassifierPath);
         }
 
         [WebInvoke]
@@ -139,17 +127,36 @@ namespace SNWCF
         }
 
 
-        public void AddItems(IEnumerable<Item> newItems) {
+        [ChangeInterceptor("Items")]
+        public void ItemAdded(Item item, UpdateOperations operation) {
 
-                string indexDir = "Index";
-                List<NewsItem> inputData = Utilities.MapBetweenLuceneandSQL(newItems);
-                Indexer luceneindexer = new Indexer(indexDir);
-                luceneindexer.Index(inputData);
-                luceneindexer.Close();
-            
+            var data = from newitem in de.Items
+                       where item.CategoryID == null
+                       select newitem;
+            int count = (data).Count();
+
+            if (count >= 10)
+            {
+                var inputData = Utilities.MapBetweenLuceneandSQL(data);
+                Utilities.IndexNewDocs(inputData); 
+                Utilities.ClassifyNewItems(inputData);
         
-        
+            }
         }
+   
+
+        [WebGet]
+        public string DoItOneTime() {
+
+            var data = from item in de.Items
+                       select item;
+            var inputData = Utilities.MapBetweenLuceneandSQL(data);
+
+            Utilities.IndexNewDocs(inputData);
+
+            return "Success";
+        }
+
 
     }
 }

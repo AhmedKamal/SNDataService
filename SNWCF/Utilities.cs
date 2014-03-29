@@ -1,7 +1,9 @@
 ﻿using LuceneService;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 
@@ -46,11 +48,11 @@ namespace SNWCF
 
         public static List<NewsItem> MapBetweenLuceneandSQL(IEnumerable<Item> newitems) {
 
-            var newsItems = from items in newitems
-                            select new { items.Content, items.Title, items.ItemID };
-
             List<NewsItem> inputData = new List<NewsItem>();
-            foreach (var item in newsItems)
+            
+            //Debug.WriteLine(newitems.FirstOrDefault().Title);
+            
+            foreach (var item in newitems)
             {
                 inputData.Add(new NewsItem { Title = item.Title, Content = item.Content, ID = item.ItemID });
             }
@@ -58,23 +60,35 @@ namespace SNWCF
             return inputData;
         }
 
-        public static bool IndexNewDocs() {
+        public static bool IndexNewDocs(IEnumerable<NewsItem> newsItems)
+        {
 
-            var newsItems = from items in de.Items
-                            where items.DateOfItem > DateTime.Today
-                            select items;
-          
-            var inputData = MapBetweenLuceneandSQL(newsItems);
+            //DateTime startDate = new DateTime(2014, 3, 27);
+            //var newsItems = from items in de.Items
+            //                where items.DateOfItem > startDate
+            //                select items;
 
-            string indexDir = "Index";
+
+            string indexDir = "E://Index";
 
 
             //Indexing Documents *** Updating the index should be done when new items are added , this code shouldn't be here.
             Indexer luceneindexer = new Indexer(indexDir);
-            luceneindexer.Index(inputData);
+            luceneindexer.Index(newsItems);
             luceneindexer.Close();
         
 			return true;
         }
+
+
+        public static void ClassifyNewItems(IEnumerable<NewsItem> items)
+        {
+
+            //string ClassifierPath = "";
+            //// Calling Classifier
+            //WebClient client = new WebClient();
+            //client.DownloadString(ClassifierPath);
+        }
+
 	}
 }
